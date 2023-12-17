@@ -183,11 +183,6 @@ function ProductMain({
         </Await>
       </Suspense>
       <br />
-      <br />
-      <p>
-        <strong>Description</strong>
-      </p>
-      <br />
       <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
       <br />
     </div>
