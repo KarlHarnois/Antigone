@@ -1,8 +1,9 @@
 import {Await, NavLink} from '@remix-run/react';
 import {Suspense} from 'react';
-import type {HeaderQuery} from 'storefrontapi.generated';
+import type {HeaderQuery, ShopFragment} from 'storefrontapi.generated';
 import type {LayoutProps} from './Layout';
 import {useRootLoaderData} from '~/root';
+import {Image} from '@shopify/hydrogen';
 
 type HeaderProps = Pick<LayoutProps, 'header' | 'cart' | 'isLoggedIn'>;
 
@@ -10,11 +11,13 @@ type Viewport = 'desktop' | 'mobile';
 
 export function Header({header, isLoggedIn, cart}: HeaderProps) {
   const {shop, menu} = header;
+
   return (
     <header className="header">
       <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
+        <LogoImage shop={shop} />
       </NavLink>
+
       <HeaderMenu
         menu={menu}
         viewport="desktop"
@@ -83,6 +86,22 @@ export function HeaderMenu({
       })}
     </nav>
   );
+}
+
+function LogoImage({shop}: {shop: ShopFragment}) {
+  const image = shop.brand?.logo?.image;
+
+  if (!image) {
+    return null;
+  } else {
+    return (
+      <Image
+        src={image.url}
+        sizes="max-height: 64px"
+        style={{width: 'revert-layer'}}
+      />
+    );
+  }
 }
 
 function HeaderCtas({

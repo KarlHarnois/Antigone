@@ -1,9 +1,11 @@
 import {useNonce} from '@shopify/hydrogen';
+
 import {
   defer,
   type SerializeFrom,
   type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
+
 import {
   Links,
   Meta,
@@ -17,6 +19,7 @@ import {
   isRouteErrorResponse,
   type ShouldRevalidateFunction,
 } from '@remix-run/react';
+
 import type {CustomerAccessToken} from '@shopify/hydrogen/storefront-api-types';
 import favicon from '../public/favicon.svg';
 import resetStyles from './styles/reset.css';
