@@ -95,11 +95,7 @@ function LogoImage({shop}: {shop: ShopFragment}) {
     return null;
   } else {
     return (
-      <Image
-        src={image.url}
-        sizes="max-height: 64px"
-        style={{width: 'revert-layer'}}
-      />
+      <Image src={image.url} sizes="100vw" style={{width: 'revert-layer'}} />
     );
   }
 }
