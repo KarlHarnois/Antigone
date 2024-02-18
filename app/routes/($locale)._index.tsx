@@ -13,19 +13,16 @@ export const meta: MetaFunction = () => {
 
 export async function loader({context}: LoaderFunctionArgs) {
   const {storefront} = context;
-  const {collections} = await storefront.query(FEATURED_COLLECTION_QUERY);
-  const featuredCollection = collections.nodes[0];
-  // const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY);
-  const catalogProducts = storefront.query(CATALOG_QUERY);
+  const products = storefront.query(CATALOG_QUERY);
 
-  return defer({featuredCollection, catalogProducts});
+  return defer({products});
 }
 
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
     <div className="home">
-      <RecommendedProducts products={data.catalogProducts} />
+      <RecommendedProducts products={data.products} />
     </div>
   );
 }
