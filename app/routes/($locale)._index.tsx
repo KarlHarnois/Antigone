@@ -58,28 +58,32 @@ function Catalog({products}: {products: Promise<CatalogQuery>}) {
 }
 
 const CATALOG_QUERY = `#graphql
+  fragment CatalogProduct on Product {
+    id
+    title
+    handle
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+    images(first: 1) {
+      nodes {
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
+  }
+
   query Catalog ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
     products(first: 20, sortKey: TITLE) {
       nodes {
-        id
-        title
-        handle
-        priceRange {
-          minVariantPrice {
-            amount
-            currencyCode
-          }
-        }
-        images(first: 1) {
-          nodes {
-            id
-            url
-            altText
-            width
-            height
-          }
-        }
+        ...CatalogProduct
       }
     }
   }
