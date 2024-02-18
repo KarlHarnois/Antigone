@@ -15,16 +15,17 @@ export async function loader({context}: LoaderFunctionArgs) {
   const {storefront} = context;
   const {collections} = await storefront.query(FEATURED_COLLECTION_QUERY);
   const featuredCollection = collections.nodes[0];
-  const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY);
+  // const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY);
+  const catalogProducts = storefront.query(CATALOG_QUERY);
 
-  return defer({featuredCollection, recommendedProducts});
+  return defer({featuredCollection, catalogProducts});
 }
 
 export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
     <div className="home">
-      <RecommendedProducts products={data.recommendedProducts} />
+      <RecommendedProducts products={data.catalogProducts} />
     </div>
   );
 }
@@ -137,6 +138,34 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
     products(first: 4, sortKey: UPDATED_AT, reverse: true) {
       nodes {
         ...RecommendedProduct
+      }
+    }
+  }
+` as const;
+
+const CATALOG_QUERY = `#graphql
+  query Catalog ($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    products(first: 20, sortKey: TITLE) {
+      nodes {
+        id
+        title
+        handle
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+        }
+        images(first: 1) {
+          nodes {
+            id
+            url
+            altText
+            width
+            height
+          }
+        }
       }
     }
   }
