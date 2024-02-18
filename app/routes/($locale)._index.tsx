@@ -2,10 +2,7 @@ import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link, type MetaFunction} from '@remix-run/react';
 import {Suspense} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
-import type {
-  FeaturedCollectionFragment,
-  RecommendedProductsQuery,
-} from 'storefrontapi.generated';
+import type {CatalogQuery} from 'storefrontapi.generated';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Antigone | Home'}];
@@ -22,26 +19,22 @@ export default function Homepage() {
   const data = useLoaderData<typeof loader>();
   return (
     <div className="home">
-      <RecommendedProducts products={data.products} />
+      <Catalog products={data.products} />
     </div>
   );
 }
 
-function RecommendedProducts({
-  products,
-}: {
-  products: Promise<RecommendedProductsQuery>;
-}) {
+function Catalog({products}: {products: Promise<CatalogQuery>}) {
   return (
-    <div className="recommended-products">
+    <div className="catalog-products">
       <Suspense fallback={<div>Loading...</div>}>
         <Await resolve={products}>
           {({products}) => (
-            <div className="recommended-products-grid">
+            <div className="catalog-products-grid">
               {products.nodes.map((product) => (
                 <Link
                   key={product.id}
-                  className="recommended-product"
+                  className="catalog-product"
                   to={`/products/${product.handle}`}
                 >
                   <Image
@@ -63,37 +56,6 @@ function RecommendedProducts({
     </div>
   );
 }
-
-const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-  fragment RecommendedProduct on Product {
-    id
-    title
-    handle
-    priceRange {
-      minVariantPrice {
-        amount
-        currencyCode
-      }
-    }
-    images(first: 1) {
-      nodes {
-        id
-        url
-        altText
-        width
-        height
-      }
-    }
-  }
-  query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...RecommendedProduct
-      }
-    }
-  }
-` as const;
 
 const CATALOG_QUERY = `#graphql
   query Catalog ($country: CountryCode, $language: LanguageCode)
