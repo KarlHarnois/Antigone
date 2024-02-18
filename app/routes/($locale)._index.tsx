@@ -2,7 +2,10 @@ import {defer, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link, type MetaFunction} from '@remix-run/react';
 import {Suspense} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
-import type {CatalogQuery} from 'storefrontapi.generated';
+import type {
+  CatalogQuery,
+  CatalogProductFragment,
+} from 'storefrontapi.generated';
 
 export const meta: MetaFunction = () => {
   return [{title: 'Antigone | Home'}];
@@ -32,21 +35,7 @@ function Catalog({products}: {products: Promise<CatalogQuery>}) {
           {({products}) => (
             <div className="catalog-products-grid">
               {products.nodes.map((product) => (
-                <Link
-                  key={product.id}
-                  className="catalog-product"
-                  to={`/products/${product.handle}`}
-                >
-                  <Image
-                    data={product.images.nodes[0]}
-                    aspectRatio="1/1"
-                    sizes="(min-width: 45em) 20vw, 50vw"
-                  />
-                  <h4>{product.title}</h4>
-                  <small>
-                    <Money data={product.priceRange.minVariantPrice} />
-                  </small>
-                </Link>
+                <CatalogProduct key={product.id} product={product} />
               ))}
             </div>
           )}
@@ -54,6 +43,22 @@ function Catalog({products}: {products: Promise<CatalogQuery>}) {
       </Suspense>
       <br />
     </div>
+  );
+}
+
+function CatalogProduct({product}: {product: CatalogProductFragment}) {
+  return (
+    <Link className="catalog-product" to={`/products/${product.handle}`}>
+      <Image
+        data={product.images.nodes[0]}
+        aspectRatio="1/1"
+        sizes="(min-width: 45em) 20vw, 50vw"
+      />
+      <h4>{product.title}</h4>
+      <small>
+        <Money data={product.priceRange.minVariantPrice} />
+      </small>
+    </Link>
   );
 }
 
