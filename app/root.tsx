@@ -24,6 +24,7 @@ import type {CustomerAccessToken} from '@shopify/hydrogen/storefront-api-types';
 import favicon from '../public/favicon.webp';
 import resetStyles from './styles/reset.css';
 import appStyles from './styles/app.css';
+import customFonts from './styles/custom-fonts.css';
 import {Layout} from '~/components/Layout';
 
 /**
@@ -51,6 +52,7 @@ export function links() {
   return [
     {rel: 'stylesheet', href: resetStyles},
     {rel: 'stylesheet', href: appStyles},
+    {rel: 'stylesheet', href: customFonts},
     {
       rel: 'preconnect',
       href: 'https://cdn.shopify.com',
