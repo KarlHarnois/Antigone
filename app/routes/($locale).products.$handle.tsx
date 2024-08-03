@@ -116,12 +116,11 @@ function redirectToFirstVariant({
 
 export default function Product() {
   const {product, variants} = useLoaderData<typeof loader>();
-  const {selectedVariant} = product;
-  console.log(selectedVariant.image);
+  const {selectedVariant, images} = product;
 
   return (
     <div className="product">
-      <ProductImage image={selectedVariant?.image} />
+      <ProductImage image={images.nodes.at(0)} />
 
       <ProductMain
         selectedVariant={selectedVariant}
@@ -132,7 +131,7 @@ export default function Product() {
   );
 }
 
-function ProductImage({image}: {image: ProductVariantFragment['image']}) {
+function ProductImage({image}: {image: any}) {
   if (!image) {
     return <div className="product-image" />;
   }
@@ -331,14 +330,6 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
       currencyCode
     }
     id
-    image {
-      __typename
-      id
-      url
-      altText
-      width
-      height
-    }
     price {
       amount
       currencyCode
