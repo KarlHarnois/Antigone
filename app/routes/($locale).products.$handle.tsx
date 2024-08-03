@@ -137,6 +137,14 @@ export default function Product() {
 function ImageCarousel({product}: {product: ProductFragment}) {
   const {images} = product;
 
+  if (images.nodes.length === 1) {
+    return (
+      <div className="product-image-slider-container">
+        <ProductImage image={images.nodes.at(0)} />
+      </div>
+    );
+  }
+
   const settings = {
     dots: true,
     adaptativeHeight: true,
