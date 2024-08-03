@@ -370,8 +370,14 @@ aside li {
 }
 
 .product-image-slider-container {
-  margin: 0 auto;
-  width: 400px;
+  margin-top: 0;
+  margin-left: 0;
+  width: 500px;
+}
+
+.product-image-slider-container .slick-prev:before,
+.product-image-slider-container .slick-next:before {
+  color: black;
 }
 
 .product-images {

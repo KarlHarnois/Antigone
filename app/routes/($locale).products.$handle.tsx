@@ -139,17 +139,17 @@ function ImageCarousel({product}: {product: ProductFragment}) {
 
   const settings = {
     dots: true,
-    // infinite: true,
-    // speed: 500,
-    // slidesToShow: 1,
-    // slidesToScroll: 1,
+    adaptativeHeight: true,
+    arrows: false,
+    autoplay: true,
   };
 
   return (
     <div className="product-image-slider-container">
       <Slider {...settings}>
-        <ProductImage image={images.nodes.at(0)} />
-        <ProductImage image={images.nodes.at(1)} />
+        {images.nodes.map((image) => {
+          return <ProductImage image={image} key={image.id} />;
+        })}
       </Slider>
     </div>
   );
