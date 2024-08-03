@@ -1,4 +1,5 @@
 import {Suspense} from 'react';
+
 import {defer, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
   Await,
@@ -116,9 +117,12 @@ function redirectToFirstVariant({
 export default function Product() {
   const {product, variants} = useLoaderData<typeof loader>();
   const {selectedVariant} = product;
+  console.log(selectedVariant.image);
+
   return (
     <div className="product">
       <ProductImage image={selectedVariant?.image} />
+
       <ProductMain
         selectedVariant={selectedVariant}
         product={product}
@@ -364,6 +368,16 @@ const PRODUCT_FRAGMENT = `#graphql
     handle
     descriptionHtml
     description
+    images(first: 5) {
+      nodes {
+        __typename
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
     options {
       name
       values
@@ -407,7 +421,7 @@ const PRODUCT_VARIANTS_FRAGMENT = `#graphql
     }
   }
   ${PRODUCT_VARIANT_FRAGMENT}
-` as const;
+` as const.image;
 
 const VARIANTS_QUERY = `#graphql
   ${PRODUCT_VARIANTS_FRAGMENT}
