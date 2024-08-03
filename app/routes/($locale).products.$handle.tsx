@@ -1,4 +1,7 @@
 import {Suspense} from 'react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 import {defer, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
@@ -116,11 +119,11 @@ function redirectToFirstVariant({
 
 export default function Product() {
   const {product, variants} = useLoaderData<typeof loader>();
-  const {selectedVariant, images} = product;
+  const {selectedVariant} = product;
 
   return (
     <div className="product">
-      <ProductImage image={images.nodes.at(0)} />
+      <ImageCarousel product={product} />
 
       <ProductMain
         selectedVariant={selectedVariant}
@@ -131,10 +134,32 @@ export default function Product() {
   );
 }
 
+function ImageCarousel({product}: {product: ProductFragment}) {
+  const {images} = product;
+
+  const settings = {
+    dots: true,
+    // infinite: true,
+    // speed: 500,
+    // slidesToShow: 1,
+    // slidesToScroll: 1,
+  };
+
+  return (
+    <div className="product-image-slider-container">
+      <Slider {...settings}>
+        <ProductImage image={images.nodes.at(0)} />
+        <ProductImage image={images.nodes.at(1)} />
+      </Slider>
+    </div>
+  );
+}
+
 function ProductImage({image}: {image: any}) {
   if (!image) {
     return <div className="product-image" />;
   }
+
   return (
     <div className="product-image">
       <Image

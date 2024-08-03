@@ -358,6 +358,7 @@ aside li {
 */
 .product {
   display: grid;
+
   @media (min-width: 45em) {
     grid-template-columns: 1fr 1fr;
     grid-gap: 4rem;
@@ -366,6 +367,11 @@ aside li {
 
 .product h1 {
   margin-top: 0;
+}
+
+.product-image-slider-container {
+  margin: 0 auto;
+  width: 400px;
 }
 
 .product-images {
