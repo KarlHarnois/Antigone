@@ -1,4 +1,8 @@
 import {Suspense} from 'react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 import {defer, redirect, type LoaderFunctionArgs} from '@shopify/remix-oxygen';
 import {
   Await,
@@ -116,9 +120,11 @@ function redirectToFirstVariant({
 export default function Product() {
   const {product, variants} = useLoaderData<typeof loader>();
   const {selectedVariant} = product;
+
   return (
     <div className="product">
-      <ProductImage image={selectedVariant?.image} />
+      <ImageCarousel product={product} />
+
       <ProductMain
         selectedVariant={selectedVariant}
         product={product}
@@ -128,10 +134,40 @@ export default function Product() {
   );
 }
 
-function ProductImage({image}: {image: ProductVariantFragment['image']}) {
+function ImageCarousel({product}: {product: ProductFragment}) {
+  const {images} = product;
+
+  if (images.nodes.length === 1) {
+    return (
+      <div className="product-image-slider-container">
+        <ProductImage image={images.nodes.at(0)} />
+      </div>
+    );
+  }
+
+  const settings = {
+    dots: true,
+    adaptativeHeight: true,
+    arrows: false,
+    autoplay: true,
+  };
+
+  return (
+    <div className="product-image-slider-container">
+      <Slider {...settings}>
+        {images.nodes.map((image) => {
+          return <ProductImage image={image} key={image.id} />;
+        })}
+      </Slider>
+    </div>
+  );
+}
+
+function ProductImage({image}: {image: any}) {
   if (!image) {
     return <div className="product-image" />;
   }
+
   return (
     <div className="product-image">
       <Image
@@ -327,14 +363,6 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
       currencyCode
     }
     id
-    image {
-      __typename
-      id
-      url
-      altText
-      width
-      height
-    }
     price {
       amount
       currencyCode
@@ -364,6 +392,16 @@ const PRODUCT_FRAGMENT = `#graphql
     handle
     descriptionHtml
     description
+    images(first: 5) {
+      nodes {
+        __typename
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
     options {
       name
       values
@@ -407,7 +445,7 @@ const PRODUCT_VARIANTS_FRAGMENT = `#graphql
     }
   }
   ${PRODUCT_VARIANT_FRAGMENT}
-` as const;
+` as const.image;
 
 const VARIANTS_QUERY = `#graphql
   ${PRODUCT_VARIANTS_FRAGMENT}

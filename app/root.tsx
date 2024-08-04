@@ -1,4 +1,5 @@
 import {useNonce} from '@shopify/hydrogen';
+import { cssBundleHref } from "@remix-run/css-bundle";
 
 import {
   defer,
@@ -50,6 +51,7 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({
 
 export function links() {
   return [
+    {rel: 'stylesheet', href: cssBundleHref},
     {rel: 'stylesheet', href: resetStyles},
     {rel: 'stylesheet', href: appStyles},
     {rel: 'stylesheet', href: customFonts},
