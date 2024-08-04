@@ -391,6 +391,7 @@ aside li {
 .product-image img {
   height: auto;
   width: 100%;
+  object-fit: cover;
 }
 
 .product-main {
